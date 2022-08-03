@@ -8,6 +8,9 @@
   border-style: hidden;
   font-family:'Courier New', Courier, monospace;
   text-transform: uppercase;
+  width: fit-content;
+  max-width: 300px;
+  min-width: 5px;
 }
 
 .slug:focus {
@@ -15,5 +18,6 @@
   outline: none;
 }
 body {
-  font-family: Helvetica, sans-serif;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
 }

@@ -8,6 +8,7 @@ export function resolveHtmlPath(htmlFileName: string) {
     const url = new URL(`http://localhost:${port}`);
     url.pathname = htmlFileName;
     return url.href;
+
   }
   return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
 }
