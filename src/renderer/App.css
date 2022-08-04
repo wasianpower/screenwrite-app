@@ -21,3 +21,15 @@ body {
   font-family: 'Courier New', Courier, monospace;
   font-size: 12px;
 }
+.action {
+  border-style: hidden;
+  font-family:'Courier New', Courier, monospace;
+  width: fit-content;
+  max-width: 300px;
+  min-width: 5px;
+  outline: none;
+}
+.action:focus {
+  border-style: hidden;
+  outline: none;
+}

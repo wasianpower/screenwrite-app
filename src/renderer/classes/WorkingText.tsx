@@ -22,7 +22,6 @@ interface TextState {
 
 interface TextProps {
   className: string,
-  id: number,
   additional: object
 }
 

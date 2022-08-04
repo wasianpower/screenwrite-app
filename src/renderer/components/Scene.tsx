@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { breakIntoLines, clean, getCurrentLine, pxToNum } from "renderer/functions/generalHelpers";
 import Action from "./Action";
 import Slug from "./Slug";
 
@@ -12,9 +13,10 @@ interface SceneProps {
 
 export default class Scene extends React.Component<SceneProps,SceneState> {
 
+
   // Non state variables \\
 
-
+  sceneRef = React.createRef();
 
   // Constructor \\
 
@@ -45,14 +47,26 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
     return this.state.textBlocks
   }
 
-  handleKeyboardEvent(evt) {}
+  handleKeydownEvent(evt: React.KeyboardEvent<HTMLDivElement>) {
+    console.log(evt.key)
+    const keypress = clean(evt.key);
+    if (keypress === "enter") {
+      evt.preventDefault();
+      console.log(breakIntoLines(evt.target as Element));
+      console.log(getCurrentLine(evt.target as Element));
+    } else if (keypress === "tab" ) {
+      evt.preventDefault();
+    }
+  }
 
   // React hooks \\
 
   render() {
+    let counter = 0
     return (
-      <div className="scene">
-        {this.state.textBlocks.map(block => <div >
+      <div className="scene" onKeyDown={evt => this.handleKeydownEvent(evt)}>
+        {this.state.textBlocks.map(block =>
+          <div key={counter++}>
           {block}
           </div>)}
       </div>
@@ -61,7 +75,7 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
 
   componentDidMount() {
     this.state.textBlocks.push(< Slug />);
-    this.state.textBlocks.push(< Action className={""} id={0} additional={}  />);
+    this.state.textBlocks.push(< Action />);
     this.setState({});
   }
 }
