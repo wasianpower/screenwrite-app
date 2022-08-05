@@ -26,27 +26,35 @@ interface SlugParts{
   suggestions: string[]
 }
 
-export default class Slug extends React.Component<{}, SlugParts> {
-  constructor(props: Object) {
+interface SlugProps {
+  id: string,
+}
+
+export default class Slug extends React.Component<SlugProps, SlugParts> {
+  constructor(props: SlugProps) {
     super(props);
-    this.state = {
-      ie: "",
-      location: "",
-      time: "",
-      suggestions: []
-    };
+    // this.state = {
+    //   sceneIe: new WorkingText({}),
+    //   sceneLocation: new WorkingText({}),
+    //   sceneTimeOfDay: new WorkingText({}),
+    //   suggestions: []
+    // };
   }
 
-  changeIe = (evt: any) => {
-    this.setState({
-      ie: evt.target.value
-    });
-  }
+  // changeIe = (evt: any) => {
+  //   let newIe = this.state.sceneIe
+  //   newIe.setState({
+
+  //   })
+  //   this.setState({
+  //     ie: evt.target.value
+  //   });
+  // }
 
   render(): React.ReactNode {
     return (
-      <div className="slug">
-        < WorkingText className='slug' additional={}/>
+      <div className="slug" id={this.props.id}>
+        < WorkingText className='slug' id={this.props.id}/>
       </div>
     );
   }

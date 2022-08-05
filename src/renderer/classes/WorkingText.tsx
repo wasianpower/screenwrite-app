@@ -22,7 +22,8 @@ interface TextState {
 
 interface TextProps {
   className: string,
-  additional: object
+  id: string,
+  additional?: object
 }
 
 export default class WorkingText extends React.Component<TextProps,TextState> {
@@ -122,6 +123,7 @@ export default class WorkingText extends React.Component<TextProps,TextState> {
   render() {
       return (
         <span className={this.props.className}
+        id={this.props.className.toUpperCase() + "-" + this.props.id}
         onChange={evt => this._handleChange(evt)}
         onMouseDown={evt => this._mouseDown(evt)}
         onMouseUp={evt => this._mouseUp(evt)}

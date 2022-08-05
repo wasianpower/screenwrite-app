@@ -56,10 +56,11 @@ export function getCurrentLine(element: Element) : number[] {
   //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\\
   const lines = breakIntoLines(element);
   const caretPos = getSelection()?.anchorOffset;
+  console.log(caretPos);
   let lineCounter = 0;
   let total = 0;
 
-  if (!caretPos) {
+  if (!caretPos && caretPos != 0) {
     throw new Error("Bad input. Signal should only be possible to receive from a div where input is possible.");
   }
 
