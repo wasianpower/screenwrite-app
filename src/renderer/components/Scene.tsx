@@ -1,3 +1,4 @@
+import { doc } from "prettier";
 import React, { ReactNode } from "react";
 import { breakIntoLines, clean, getCurrentLine } from "renderer/functions/generalHelpers";
 import Action from "./Action";
@@ -5,7 +6,8 @@ import Slug from "./Slug";
 
 interface SceneState {
   textBlocks: ReactNode[],
-  currentBlock : number
+  currentBlock : number,
+  nextElementId: number
 }
 
 interface SceneProps {
@@ -13,7 +15,6 @@ interface SceneProps {
 }
 
 export default class Scene extends React.Component<SceneProps,SceneState> {
-
 
   // Non state variables \\
 
@@ -25,18 +26,23 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
     super(props);
     this.state = {
       textBlocks: [],
-      currentBlock: 0
+      currentBlock: 0,
+      nextElementId: 2
     }
   }
 
   // Methods \\
 
-  addTextBlock(textBlock : ReactNode, index? : number) : ReactNode[] {
-    if (!index) {
-      index = this.state.textBlocks.length
-    }
+  addTextBlock(textBlock : ReactNode, current : HTMLElement, focus : boolean = true, index? : number = this.state.textBlocks.length) : ReactNode[] {
+    //TODO: System for managing ID numbers, making sure they are in order.
     this.state.textBlocks.splice(index, 0, textBlock);
     this.setState({});
+    if (focus) {
+      setTimeout(() => {
+        console.log(document.getElementById(index.toString()));
+        this.changeInputDiv(current,false);
+      }, 0)
+    }
     return this.state.textBlocks
   }
 
@@ -50,7 +56,7 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
   }
 
   changeInputDiv(element: HTMLElement, up: boolean) : Element|null {
-    const nextElemId = up ? (+element.id.split("-")[1] - 1).toString() : (+element.id.split("-")[1] + 1).toString();
+    const nextElemId = up ?(+element.id.split("-")[1] - 1).toString() : (+element.id.split("-")[1] + 1).toString();
     const nextEditableId = document.getElementById(nextElemId)?.className.toUpperCase() + "-" + nextElemId;
     console.log(nextEditableId);
     const nextEditableElement  = document.getElementById(nextEditableId);
@@ -67,14 +73,26 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
   }
 
   handleKeydownEvent(evt: React.KeyboardEvent<HTMLDivElement>) {
-    console.log(evt.key)
     const keypress = clean(evt.key);
     let caretCurrentLine;
     switch (keypress) {
       case ("enter"): {
         evt.preventDefault();
-        console.log(breakIntoLines(evt.target as Element));
-        console.log(getCurrentLine(evt.target as Element));
+        const element = evt.target as Element;
+        const selection = getSelection();
+        if (!selection || ! element) {
+          throw new Error("Selection or target element is null.");
+          break;
+        }
+
+        if (!element.textContent || (selection && selection.focusOffset == selection.anchorOffset && selection.anchorOffset == clean(element.textContent).length)) {
+          this.addTextBlock(<Action id={this.state.nextElementId.toString()}/>,evt.target as HTMLElement) // TODO: Make this insert in the correct place instead of just at the end.
+          //TODO: Wow the ID system is FUCKED
+          this.setState({
+            nextElementId: this.state.nextElementId + 1
+          });
+          console.log(this.state);
+        }
         break;
       }
       case ("tab"): {
@@ -82,7 +100,7 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
         break;
       }
       case ("arrowup"): {
-        caretCurrentLine = getCurrentLine(evt.target as Element);
+        caretCurrentLine = getCurrentLine(evt.target as Element); //TODO: Make the caret go the correct place in the next input when going up or down
         if (caretCurrentLine[0] === 0) {
           const element = (evt.target as HTMLElement)
           if (this.changeInputDiv(element,true)) {

@@ -56,7 +56,6 @@ export function getCurrentLine(element: Element) : number[] {
   //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\\
   const lines = breakIntoLines(element);
   const caretPos = getSelection()?.anchorOffset;
-  console.log(caretPos);
   let lineCounter = 0;
   let total = 0;
 

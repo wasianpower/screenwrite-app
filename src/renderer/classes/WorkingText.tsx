@@ -30,7 +30,7 @@ export default class WorkingText extends React.Component<TextProps,TextState> {
 
   // Non state variables \\
 
-  inputRef: React.RefObject<unknown>;
+  writeInput: HTMLSpanElement | null;
 
   // Constructor \\
 
@@ -137,4 +137,5 @@ export default class WorkingText extends React.Component<TextProps,TextState> {
         > {this.state.content} </span>
       )
   }
+
 }
