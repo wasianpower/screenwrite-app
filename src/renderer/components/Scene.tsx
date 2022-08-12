@@ -3,11 +3,13 @@ import React, { ReactNode } from "react";
 import { breakIntoLines, clean, getCurrentLine } from "renderer/functions/generalHelpers";
 import Action from "./Action";
 import Slug from "./Slug";
+import SuggestionBox from "./SuggestionBox";
 
 interface SceneState {
   textBlocks: ReactNode[],
   currentBlock : number,
-  nextElementId: number
+  nextElementId: number,
+  suggestionBox: null|ReactNode
 }
 
 interface SceneProps {
@@ -27,13 +29,14 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
     this.state = {
       textBlocks: [],
       currentBlock: 0,
-      nextElementId: 2
+      nextElementId: 2,
+      suggestionBox: null
     }
   }
 
   // Methods \\
 
-  addTextBlock(textBlock : ReactNode, current : HTMLElement, focus : boolean = true, index? : number = this.state.textBlocks.length) : ReactNode[] {
+  addTextBlock(textBlock : ReactNode, current : HTMLElement, focus : boolean = true, index : number = this.state.textBlocks.length) : ReactNode[] {
     //TODO: System for managing ID numbers, making sure they are in order.
     this.state.textBlocks.splice(index, 0, textBlock);
     this.setState({});
@@ -76,7 +79,7 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
     const keypress = clean(evt.key);
     let caretCurrentLine;
     switch (keypress) {
-      case ("enter"): {
+      case ("enter"): { //TODO: Make this correspond to the right key in config/keybinds.json instead of a constant.
         evt.preventDefault();
         const element = evt.target as Element;
         const selection = getSelection();
@@ -84,10 +87,15 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
           throw new Error("Selection or target element is null.");
           break;
         }
-
-        if (!element.textContent || (selection && selection.focusOffset == selection.anchorOffset && selection.anchorOffset == clean(element.textContent).length)) {
+        if (!element.textContent || element.textContent.trim().length === 0) {
+          console.log(<SuggestionBox value="I" options={["INT.", "EXT.", "I/E."]}/>)
+          this.setState({
+            suggestionBox: <SuggestionBox value={element.textContent ? element.textContent : ""} options={["INT.", "EXT.", "I/E."]}/>
+          })
+        } else if (!element.textContent || (selection && selection.focusOffset == selection.anchorOffset && selection.anchorOffset == clean(element.textContent).length)) {
           this.addTextBlock(<Action id={this.state.nextElementId.toString()}/>,evt.target as HTMLElement) // TODO: Make this insert in the correct place instead of just at the end.
           //TODO: Wow the ID system is FUCKED
+          //TODO: Just so so so fucked
           this.setState({
             nextElementId: this.state.nextElementId + 1
           });
@@ -133,7 +141,8 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
           <div key={counter++}>
           {block}
           </div>)
-          }
+        }
+        {this.state.suggestionBox}
       </div>
     )
   }

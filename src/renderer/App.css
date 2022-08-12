@@ -3,33 +3,59 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
-
-.slug {
-  border-style: hidden;
-  font-family:'Courier New', Courier, monospace;
-  text-transform: uppercase;
-  width: fit-content;
-  max-width: 300px;
-  min-width: 5px;
-}
-
-.slug:focus {
-  border-style: hidden;
-  outline: none;
-}
 body {
   font-family: 'Courier New', Courier, monospace;
   font-size: 12px;
 }
+
+span:where(.slug, .action, .dialogue, .character, .transition, .title, .break) {
+  border-style: hidden;
+  font-family:'Courier New', Courier, monospace;
+  width: 300px;
+  min-height: 14px;
+}
+
+span:where(.slug, .action, .dialogue, .character, .transition, .title, .break):focus {
+  border-style: hidden;
+  outline: none;
+}
+
+span:where(.slug, .action, .dialogue, .character, .transition, .title, .break):empty {
+  display: block;
+  height: 1em;
+}
+
+.slug {
+  text-transform: uppercase;
+}
+
 .action {
   border-style: hidden;
   font-family:'Courier New', Courier, monospace;
   width: fit-content;
   max-width: 300px;
-  min-width: 5px;
+  min-width: 300px;
   outline: none;
+  min-height: 14px;
 }
 .action:focus {
   border-style: hidden;
   outline: none;
+}
+.action:empty {
+  display: block;
+  height: 1em;
+}
+.suggestionbox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 2px;
+}
+.suggestion {
+  border-style: solid;
+}
+.suggestion:hover {
+  background-color:antiquewhite;
+  cursor: pointer;
 }
