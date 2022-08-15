@@ -54,8 +54,10 @@ span:where(.slug, .action, .dialogue, .character, .transition, .title, .break):e
 }
 .suggestion {
   border-style: solid;
+  cursor: pointer;
 }
-.suggestion:hover {
+.suggestion-selected {
+  border-style: solid;
   background-color:antiquewhite;
   cursor: pointer;
 }

@@ -19,7 +19,7 @@ function getSuggestions(value : string, options : string[]) {
 };
 console.log(getSuggestions) //this is just because the unused flag was annoying me
 
-interface SlugParts{
+interface SlugState{
   sceneIe: WorkingText,
   sceneLocation: WorkingText,
   sceneTimeOfDay: WorkingText,
@@ -30,31 +30,15 @@ interface SlugProps {
   id: string,
 }
 
-export default class Slug extends React.Component<SlugProps, SlugParts> {
+export default class Slug extends React.Component<SlugProps, SlugState> {
   constructor(props: SlugProps) {
     super(props);
-    // this.state = {
-    //   sceneIe: new WorkingText({}),
-    //   sceneLocation: new WorkingText({}),
-    //   sceneTimeOfDay: new WorkingText({}),
-    //   suggestions: []
-    // };
   }
-
-  // changeIe = (evt: any) => {
-  //   let newIe = this.state.sceneIe
-  //   newIe.setState({
-
-  //   })
-  //   this.setState({
-  //     ie: evt.target.value
-  //   });
-  // }
 
   render(): React.ReactNode {
     return (
       <div className="slug" id={this.props.id}>
-        < WorkingText className='slug' id={this.props.id}/>
+        < WorkingText className='slug' id={this.props.id} options={["INT.", "EXT.", "I/E."]}/>
       </div>
     );
   }

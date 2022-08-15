@@ -1,4 +1,6 @@
 import React from "react";
+import SuggestionBox from "renderer/components/SuggestionBox";
+import { clean } from "renderer/functions/generalHelpers";
 
 
 //||||||||||||||||||||||||||||||||||||||||||||||\\
@@ -17,12 +19,14 @@ interface TextState {
   inputting: boolean,
   additional: object,
   mousedown: boolean,
-  focused: boolean
+  focused: boolean,
+  suggestions: string[]
 }
 
 interface TextProps {
   className: string,
   id: string,
+  options?: string[],
   additional?: object
 }
 
@@ -30,20 +34,20 @@ export default class WorkingText extends React.Component<TextProps,TextState> {
 
   // Non state variables \\
 
-  writeInput: HTMLSpanElement | null;
 
   // Constructor \\
 
   constructor(props : TextProps) {
     super(props);
     this.state = {
-      content: "boop",
+      content: "",
       inputting: false,
       additional: {},
       mousedown: false,
-      focused: false
+      focused: false,
+      suggestions: []
     }
-    this.inputRef = React.createRef();
+    console.log(this.props.options);
   }
 
   // 'Private' methods \\
@@ -60,9 +64,10 @@ export default class WorkingText extends React.Component<TextProps,TextState> {
     })
   }
 
-  _handleChange(evt: any) : void {
+  _handleChange(evt: React.FormEvent<HTMLSpanElement>) : void {
+    const contentRaw = evt.currentTarget.textContent
     this.setState({
-      content: evt.target.value
+      content: contentRaw ? contentRaw : ""
     })
   }
 
@@ -112,6 +117,14 @@ export default class WorkingText extends React.Component<TextProps,TextState> {
     })
   }
 
+  _handleKeydown(evt: React.KeyboardEvent<HTMLSpanElement>) : void {
+    if (clean(evt.key) === "enter") {
+      evt.preventDefault();
+    }
+
+  }
+
+
   // 'Public' methods \\
 
   getLength() : number {
@@ -122,19 +135,23 @@ export default class WorkingText extends React.Component<TextProps,TextState> {
 
   render() {
       return (
-        <span className={this.props.className}
-        id={this.props.className.toUpperCase() + "-" + this.props.id}
-        onChange={evt => this._handleChange(evt)}
-        onMouseDown={evt => this._mouseDown(evt)}
-        onMouseUp={evt => this._mouseUp(evt)}
-        onMouseMove={evt => this._highlightProtocol(evt)}
-        onBlur={evt => {this._haltInput(evt); this._handleDefocus(evt)}}
-        contentEditable={this.state.inputting}
-        suppressContentEditableWarning={true} //TODO: Figure out how bad this warning is and if its gonna fuck me up down the line
-        onMouseEnter={evt => this._handleMouseEnter(evt)}
-        onMouseLeave={evt => this._handleDefocus(evt)}
-        onFocus={evt => this._handleFocus(evt)}
-        > {this.state.content} </span>
+        <div>
+          <span className={this.props.className}
+          id={this.props.className.toUpperCase() + "-" + this.props.id}
+          onInput={evt => this._handleChange(evt)}
+          onMouseDown={evt => this._mouseDown(evt)}
+          onMouseUp={evt => this._mouseUp(evt)}
+          onMouseMove={evt => this._highlightProtocol(evt)}
+          onBlur={evt => {this._haltInput(evt); this._handleDefocus(evt)}}
+          contentEditable={this.state.inputting}
+          suppressContentEditableWarning={true}
+          onMouseEnter={evt => this._handleMouseEnter(evt)}
+          onMouseLeave={evt => this._handleDefocus(evt)}
+          onFocus={evt => this._handleFocus(evt)}
+          onKeyDown={evt => this._handleKeydown(evt)}
+          ></span>
+          <SuggestionBox value={this.state.content ? this.state.content : ""} options={this.props.options ? this.props.options : []}/>
+        </div>
       )
   }
 

@@ -1,6 +1,5 @@
-import { doc } from "prettier";
 import React, { ReactNode } from "react";
-import { breakIntoLines, clean, getCurrentLine } from "renderer/functions/generalHelpers";
+import { clean, getCurrentLine } from "renderer/functions/generalHelpers";
 import Action from "./Action";
 import Slug from "./Slug";
 import SuggestionBox from "./SuggestionBox";
@@ -87,12 +86,13 @@ export default class Scene extends React.Component<SceneProps,SceneState> {
           throw new Error("Selection or target element is null.");
           break;
         }
-        if (!element.textContent || element.textContent.trim().length === 0) {
-          console.log(<SuggestionBox value="I" options={["INT.", "EXT.", "I/E."]}/>)
-          this.setState({
-            suggestionBox: <SuggestionBox value={element.textContent ? element.textContent : ""} options={["INT.", "EXT.", "I/E."]}/>
-          })
-        } else if (!element.textContent || (selection && selection.focusOffset == selection.anchorOffset && selection.anchorOffset == clean(element.textContent).length)) {
+        // if (!element.textContent || element.textContent.trim().length === 0) {
+        //   console.log(<SuggestionBox value="I" options={["INT.", "EXT.", "I/E."]}/>)
+        //   this.setState({
+        //     suggestionBox: <SuggestionBox value={element.textContent ? element.textContent : ""} options={["INT.", "EXT.", "I/E."]}/>
+        //   })
+        // } else
+        if (!element.textContent || (selection && selection.focusOffset == selection.anchorOffset && selection.anchorOffset == clean(element.textContent).length)) {
           this.addTextBlock(<Action id={this.state.nextElementId.toString()}/>,evt.target as HTMLElement) // TODO: Make this insert in the correct place instead of just at the end.
           //TODO: Wow the ID system is FUCKED
           //TODO: Just so so so fucked
